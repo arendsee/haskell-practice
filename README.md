@@ -8,4 +8,9 @@ really want to remap my workspace keys. So ... learn Haskell.
 
 I'll be mostly basing my studies (for now at least) on the quirky Learn You
 A Haskell tutorial.
-# haskell-practice
+
+# Contents
+
+ 1. by-topic - material loosely following a tutorial
+ 2. scratch - random stuff, some modified from tutorials
+ 3. alogrithms - 
