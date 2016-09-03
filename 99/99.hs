@@ -51,14 +51,14 @@ n6 (x:[]) = True
 n6 x      = (take k) x == (take k . reverse ) x
     where k = div (length x) 2
 
--- -- #7
--- -- flatten a nested list
--- -- I understand the problem, but I am familiar enough with types ...
--- data NestedList a = Elem a | List [NestedList a]
--- n7 :: NestedList a -> [a]
--- n7 (Elem x)   = [x]
--- n7 (List [])  = [ ]
--- n7 (List x:r) = n7 x ++ n7 r
+-- #7
+-- flatten a nested list
+-- I understand the problem, but I am familiar enough with types ...
+data NestedList a = Elem a | List [NestedList a]
+n7 :: NestedList a -> [a]
+n7 (Elem x)     = [x]
+n7 (List [])    = [ ]
+n7 (List (x:r)) = n7 x ++ n7 (List r)
 
 -- #8
 -- remove duplicated elements
@@ -96,6 +96,7 @@ main = do
     (putStrLn . show . n4) x 
     (putStrLn . show . n5) x 
     (putStrLn . show . n6) [3, 2, 1, 2, 3]
+    (putStrLn . show . n7) (List [Elem 'a', List [Elem 'b', Elem 'c'], Elem 'c'])
     (putStrLn . show . n8) [3,3,3,2,4,4,6,3,3]
     (putStrLn . show . n9) [3,3,3,2,4,4,6,3,3]
     (putStrLn . show . n10) "aaaadsddddddddrf" 

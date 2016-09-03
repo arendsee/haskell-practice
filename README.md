@@ -9,6 +9,15 @@ really want to remap my workspace keys. So ... learn Haskell.
 I'll be mostly basing my studies (for now at least) on the quirky Learn You
 A Haskell tutorial.
 
+# Things I naively think are true
+
+ 1. all variables are immutable
+ 2. functions take precedence over everything
+ 3. variables needn't be declared before textual use, only before evaluation
+ 4. '=' is not assignment, but equivalence, like in math
+ 5. 'where' is used for local local values (as opposed to values local to
+    a module that are not imported)
+
 # Contents
 
  1. by-topic - material loosely following a tutorial
