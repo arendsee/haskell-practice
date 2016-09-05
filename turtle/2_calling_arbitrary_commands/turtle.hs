@@ -12,6 +12,15 @@ main = do
     (putStrLn . show) time
     print time
 
+    view (ls "./")
+
+    shell "ls" empty
+
+    stdout (stdin "turtle.hs")
+
+-- stdout :: MonadIO io => Shell text -> io ()
+-- stdin :: Shell Text
+
 -- pwd      :: MonadIO io => io Turtle.FilePath
 -- datefile :: MonadIO io => Turtle.FilePath -> io UTCTime
 
