@@ -17,6 +17,7 @@ A Haskell tutorial.
  4. '=' is not assignment, but equivalence, like in math
  5. 'where' is used for local local values (as opposed to values local to
     a module that are not imported)
+ 6. `do` is a special syntax for monads
 
 # Contents
 
