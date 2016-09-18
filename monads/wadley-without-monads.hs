@@ -21,7 +21,7 @@ eval (Div a b) = div (eval a) (eval b)
 
 
 ---------------------------------------------------------------------
--- with warnings --
+-- 1. handle exceptions
 
 data M a = Raise Exception | Return a
 type Exception = String
@@ -47,6 +47,7 @@ eval' (Div x y) = case (eval' x) of
 
 
 ---------------------------------------------------------------------
+-- 2. hold state
 -- with count of number of divisions performed --
 
 -- type `M' a` is now a function that takes the inital state and returns
@@ -76,6 +77,7 @@ eval'' (Div t u) x =
 
 
 ---------------------------------------------------------------------
+-- 3. process output
 -- tracing output
 
 type M'' a = (Output, a)
@@ -107,6 +109,14 @@ eval'''' (Div t u) =
     let (x, a) = eval'''' t in
     let (y, b) = eval'''' u in
     (line (Div t u)(div a b) ++ x ++ y, (div a b))
+
+
+
+---------------------------------------------------------------------
+-- Overview
+
+-- In all three cases, `Term -> M Int`, in general `a -> M b`, where b is the
+-- output and M contains additional effects.
 
 
 ---------------------------------------------------------------------
