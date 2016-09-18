@@ -68,3 +68,17 @@ succ b
 (succ . succ . succ . succ) a
 -- but if you try to go past the bound, you die terribly
 (succ . succ . succ . succ . succ) a
+
+-- list defined as a recursive algebraic datatype
+data List a = Cons a (List a) | Empty
+
+
+-- Several binary tree implementations:
+
+-- morphless
+data Tree a = Empty | Leaf Int | Node Tre Tree
+-- polymorphic
+data Tree a = Empty | Leaf a | Node (Tree a) (Tree a)
+-- leafless - interior nodes can have values too
+data Tree a = Empty | Node a (Tree a) (Tree a)
+
