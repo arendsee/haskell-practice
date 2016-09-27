@@ -4,6 +4,6 @@ all:
 	ghc ${TARGET}.hs -o h
 	gcc hello-c.c -o c
 
-.Phony: clean
+.PHONY: clean
 clean:
 	rm -f *.o *.hi c h
