@@ -1,11 +1,13 @@
 import System.Environment (getArgs)
+import Data.List
+import Data.List.Split
 
 -- Borrowed verbatim from Real World Haskell ------------------------
 interactWith function inputFile outputFile = do
   input <- readFile inputFile
   writeFile outputFile (function input)
 
-main = mainWith wc'
+main = mainWith $ cut' 5 
   where mainWith function = do
           args <- getArgs
           case args of
@@ -56,3 +58,43 @@ wc' cs = dpr cs d p r
           p = map length 
           r = (show . sum)
 -- This value differs from wc since newlines are not counted
+
+-- Reverse columns in TAB delimited file
+colrev' :: String -> String
+colrev' [] = [] 
+colrev' cs = dpr cs d p r
+    where d = lines
+          p = map (intercalate "\t" . reverse . splitOn "\t")
+          r = unlines
+
+
+not_comment :: String -> Bool
+not_comment [] = False
+not_comment (x:xs) = if x == '#' then False else True
+
+-- uncomment
+uncomment' :: String -> String
+uncomment' [] = [] 
+uncomment' cs = dpr cs d p r
+    where
+        d = lines
+        p = filter not_comment
+        r = unlines
+
+-- transpose the output
+transpose' :: String -> String
+transpose' [] = [] 
+transpose' cs = dpr cs d p r
+    where
+        d = transpose . map (splitOn "\t") . lines
+        p = id
+        r = unlines . map (intercalate "\t")
+
+-- take column i
+cut' :: Int -> String -> String
+cut' _ [] = [] 
+cut' i cs = dpr cs d p r
+    where
+        d = transpose . map (splitOn "\t") . lines
+        p = last . take i
+        r = intercalate "\n"
