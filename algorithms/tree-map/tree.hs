@@ -54,6 +54,17 @@ pruneTree f (Node l c r)
     | f c       = Node (pruneTree f l) c (pruneTree f r)
     | otherwise = Nil
 
+-- problem, this is really slow
+-- also, it is unbalanced
+addElement :: (Ord a) => Tree a -> a -> Tree a
+addElement Nil x = Node Nil x Nil
+addElement (Node l c r) x
+    | x < c     = Node (addElement l x) c r
+    | otherwise = Node l c (addElement r x)
+
+sortedBinaryTree :: (Ord a) => [a] -> Tree a
+sortedBinaryTree = foldl (\acc x -> addElement acc x) Nil
+
 main = do
     let five' = treeFromList [1..5]
     let ten'  = treeFromList [1..10]
@@ -68,6 +79,10 @@ main = do
     print $ depth    $ treeFromList [1..10]
     print $ depth    $ treeFromList [1..1000]
     print $ depth    $ treeFromList [1..100000]
+
+    print $ listFromTree $ sortedBinaryTree [4,7,2,45,1,6,0,1,1]
+
+    print $ depth $ sortedBinaryTree [1..1000]
 
     -- Testing empty list, it erks me that I have to typecast the the empty
     -- list. If I don't ghc complains that it can determine whether a is in
