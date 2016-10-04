@@ -20,6 +20,19 @@ instance MultiBool Bool where
     multibool True = True
     multibool False = False
 
+
+-- functors
+-- 
+-- A type constructor
+-- -----.
+--      |
+--      v
+class Functor f where
+    fmap :: (a -> b) -> f a -> f b
+
+instance Functor [] where
+    fmap :: map
+
 main = do
     let x = 0 :: Int
     (print (multibool []))
