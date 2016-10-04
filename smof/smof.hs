@@ -20,32 +20,33 @@ data Header = Header String String deriving Show
 
 data Sequence = UNK String | AA String | DNA String | RNA String deriving Show
 
-data Entry = Entry Header Sequence deriving Show
+data Entry = Entry (Maybe Header) (Maybe Sequence) deriving Show
 
 splitRecords :: String -> [String]
 splitRecords [] = []
-splitRecords s = splitOn ">" s
+splitRecords s = (drop 1 . splitOn ">") s
 
-makeHead :: String -> Header
+makeHead :: String -> Maybe Header
 makeHead s = case (words s) of
-    []     -> Header "" ""
-    (x:xs) -> Header x (unwords xs)
+    []     -> Nothing
+    (x:xs) -> Just (Header x (unwords xs))
 
-makeBody :: [String] -> Sequence
-makeBody [] = UNK ""
-makeBody s = UNK (unlines s)
+makeBody :: [String] -> Maybe Sequence
+makeBody [] = Nothing
+makeBody s = Just (UNK (unlines s))
 
-extractSeq :: String -> Entry
+extractSeq :: String -> Maybe Entry
 extractSeq s = case (lines s) of
-    (x:xs) -> Entry (makeHead x) (makeBody xs)
+    []     -> Nothing
+    (x:xs) -> Just (Entry (makeHead x) (makeBody xs))
 
-splitSeqs :: String -> [Entry]
+splitSeqs :: String -> [Maybe Entry]
 splitSeqs [] = []
 splitSeqs xs = (map extractSeq . splitRecords) xs
 
-head' :: [Entry] -> Maybe Entry
+head' :: [Maybe Entry] -> Maybe Entry
 head' [] = Nothing
-head' (x:xs) = Just x
+head' (x:xs) = x
 
 
 {- -- parallel processes, one entry to one result, 1-n-n-1                                       -}
