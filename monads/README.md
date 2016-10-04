@@ -56,10 +56,89 @@ call, you have to pass the message as a parameter. If you want to track
 the depth of a call, you have to pass a count parameter. Modifying
 existing code to do this breaks modularity. Enter the monad.
 
+Following Brian Beckman [3]:
+
+1. Functions
+
+Instead of `int x`, `x : int`. Now functions are `f : int -> int`. Now make
+generic, `f : a -> a`, where `a` is any type.
+
+2. Monoids
+
+```
+f : a -> a
+g : a -> a
+-- f(g a)
+h = f . g
+h :: a -> a
+```
+
+h is a monoid, a combination of two functions which have the same type.
+
+This is **the** way to build complexity.
+
+Monoid - a set of things plus a set of rules for combining the things, that follow a set of rules
+
+A mapping rule plus a type of data.
+
+Rule 1: Monoids are associative: `(a . b) . c = a . (b . c)`
+Rule 2: Identity, i exists such that ` a . i = a`
+
+Does NOT require commutativity.
+
+See clock example
+
+3. Functions
+
+Functions under composition are monoids
+
+4. Monads
+
+Let's talk about functions that return transforms of input
+
+```
+f' :: a -> M a
+g' :: a -> M a
+```
+
+ * Monads are used to deal with complexity
+
+ * Monads allow composition
+
+ * The bind operator is a composition operator for composing f' and g'
+
+ * Once you have monads, you are magic, you cannot prove stuff, recombine in any way
+
+ * Once you have a set of monads, you can combine them in any way
+
+Another word - Monoid Category
+
+Now on to category theory [4]
+
+Objects - sets
+Morphisms - functions on sets - closed on composition
+
+Mostly category theory is a system of syntax.
+
+Types are spaces and spaces are types
+
+Let's say we have a category of categories
+Objects are categories
+Morphisms are functors, maps from one category to another
+Functor - a map between category that preserves structure
+Natural transormations - maps between functors
+
+Might also be useful to look up commutative diagrams, see wikipedia [5]
+
+In case I thought monads were hard ... Yoneda lemma.
+
 References:
 
  1. https://www.haskell.org/tutorial/monads.html
  2. Wadler, Philip. 1995. Monads for functional programming
+ 3. Brian Beckman. https://www.youtube.com/watch?v=ZhuHCtR3xq8
+ 4. Tom LaGatta. https://www.youtube.com/watch?v=o6L6XeNdd\_k
+ 5. https://en.wikipedia.org/wiki/Commutative\_diagram
 
 
 @inproceedings{wadler1995monads,

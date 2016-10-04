@@ -3,3 +3,6 @@ Main
 *.o
 *.hi
 run
+
+tags
+TAGS

@@ -23,4 +23,9 @@ A Haskell tutorial.
 
  1. by-topic - material loosely following a tutorial
  2. scratch - random stuff, some modified from tutorials
- 3. alogrithms - 
+ 3. screw it, I'll never keep this up-to-date
+
+# Terminology
+
+ 1. *Partial* versus *total* functions - partial functions are not defined across
+    their entire domain, for example `head`, which dies on empty lists.
