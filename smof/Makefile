@@ -1,7 +1,7 @@
 TARGET=smof
 
 all:
-	ghc ${TARGET}.hs
+	ghc -o ${TARGET} *.hs
 
 .Phony: clean
 clean:
