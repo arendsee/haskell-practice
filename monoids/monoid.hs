@@ -1,7 +1,7 @@
 -- A monoid is defined simply as a set with both an identity function and an
 -- associative binary operator.
 
-class Monoid a where
+class MyMonoid a where
     -- identity element
     monoid_id :: a
     -- binary operator
@@ -9,9 +9,8 @@ class Monoid a where
 
 data Clock = Clock Int Int deriving Show
 
-
-instance Monoid (Clock h m) where
-    monoid_id (Clock 24 0)
+instance MyMonoid Clock where
+    monoid_id = (Clock 24 0)
     monoid_op (Clock h1 m1) (Clock h2 m2) = Clock (mod ht 24) (mod mt 60) where
         mt = m1 + m2
         ht = h1 + h2 + div mt 60
