@@ -16,5 +16,8 @@ instance MyMonoid Clock where
         ht = h1 + h2 + div mt 60
 
 main = do
-    print $ Clock 23 4
-    print $ monoid_op (Clock 23 4) (Clock 1 59)
+    let a = Clock 23 4
+    let b = Clock 1 59
+    print $ a
+    print $ monoid_op a b
+    print $ monoid_op a monoid_id
