@@ -1,4 +1,4 @@
-SUB = derek-white rwh wadley
+SUB = derek-white rwh wadley wrapping
 
 .PHONY: clean
 clean:
