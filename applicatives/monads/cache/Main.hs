@@ -13,40 +13,54 @@ instance Show (Cached a b) where
     show (Empty _) = "empty"
     show (Full _ b) = "full"
 
-evaluate' :: Cached a b -> a -> b
-evaluate' (Empty f  ) a = f a
-evaluate' (Full  f b) _ = b
+evaluate' :: a -> Cached a b -> b
+evaluate' a (Empty f  ) = f a
+evaluate' _ (Full  f b) = b
 
 run' :: Cached a b -> a -> Cached a b
 run' (Empty f  ) a = Full f (f a)
 run' (Full  f b) _ = Full f b
 
-compose' :: Cached a b -> Cached b c -> Cached a c
--- for two empty containers, just compose the functions
-compose' (Empty f) (Empty g) = Empty (g . f)
+
+--------------------------------------------------------------------------
+pipe' :: Cached a b -> Cached b c -> Cached a c
+-- for two empty containers, just pipe the functions
+pipe' (Empty f) (Empty g) = Empty (g . f)
 -- if the former is a cached, get a closure
-compose' (Full f x) (Empty g) = Full (g . f) (g x)
+pipe' (Full f x) (Empty g) = Full (g . f) (g x)
 -- if both are full, then return the cached composition
-compose' (Full f x) (Full g y) = Full (g . f) y
+pipe' (Full f x) (Full g y) = Full (g . f) y
 -- what to do in this situation is a design decision, there are several
 -- reasonable choises, I choose the safe route 
-compose' (Empty f) (Full g y) = Empty (g . f)
+pipe' (Empty f) (Full g y) = Empty (g . f)
+-- and infix:
+a |. b = a `pipe'` b
 
--- data Chain = Compound (a -> b) Chain | None
+--------------------------------------------------------------------------
 
 main = do
+
+    let s1 = "this is not a cat"
+    let s2 = "methinks it be a dog"
+
     -- load a function into a Cache structure
     let x = Empty words
     -- run the function on input, caching the result
-    let y = run' x "not a cat"
+    let y = run' x s1
     -- this will run the function on the given input
-    print $ evaluate' x "a cat"
+    print $ evaluate' s2 x
     -- this will get the cached value
-    print $ evaluate' y "a cat"
+    print $ evaluate' s2 y
 
     let cwords   = Empty words
     let creverse = Empty reverse
     let cunwords = Empty unwords
-    print $ (unwords . reverse . words) "a cat"
-    print $ (compose' cwords (compose' creverse cunwords))
-    print $ evaluate' (compose' cwords (compose' creverse cunwords)) "a cat"
+
+    -- standard composition
+    print $ (unwords . reverse . words) s2 
+    -- pipe composition of wrapped functions
+    print $ (pipe' cwords (pipe' creverse cunwords))
+    -- evaluate wrapped composition
+    print $ evaluate' s2 (pipe' cwords (pipe' creverse cunwords))
+    -- evaluate wrapped composition with infix notation
+    print $ evaluate' s2 (cwords |. creverse |. cunwords)
