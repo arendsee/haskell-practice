@@ -1,0 +1,10 @@
+Gm01	phytozomev9_0	gene	27355	28320	.	-	.	Name=Glyma.01g000100;ID=1;Alias=Glyma.01g000100.Wm82.a2.v1;agi_genecode=magnesium%20ion%20binding%2Cthiamin%20pyrophosphate%20binding%2Chydro-lyases%2Ccatalytics%2C2-succinyl-5-enolpyruvyl-6-hydroxy-3-cyclohexene-1-carboxylic-acid%20synthases;ancestorIdentifier=Glyma01g00210.v1.1;Dbxref=AGI_GeneCode:AT1G68890.1
+Gm01	phytozomev9_0	mRNA	27355	28320	.	-	.	Name=Glyma.01g000100.1;Parent=1;ID=2;Alias=Glyma.01g000100.1.Wm82.a2.v1
+Gm01	phytozomev9_0	gene	58975	67527	.	-	.	Name=Glyma.01g000200;ID=8;Alias=Glyma.01g000200.Wm82.a2.v1
+Gm01	phytozomev9_0	mRNA	58975	67527	.	-	.	Name=Glyma.01g000200.1;Parent=8;ID=9;Alias=Glyma.01g000200.1.Wm82.a2.v1
+Gm01	phytozomev9_0	gene	67770	69968	.	+	.	Name=Glyma.01g000300;ID=21;Alias=Glyma.01g000300.Wm82.a2.v1
+Gm01	phytozomev9_0	mRNA	67770	69968	.	+	.	Name=Glyma.01g000300.1;Parent=21;ID=22;Alias=Glyma.01g000300.1.Wm82.a2.v1
+Gm01	phytozomev9_0	gene	90152	95947	.	-	.	Name=Glyma.01g000400;ID=25;Dbxref=Pfam:PF04434,Pfam:PF10551,GO:0008270,AGI_GeneCode:AT4G38170.1;arabidopsis_symbol=FRS9;go=zinc%20ion%20binding;agi_genecode=FAR1-related%20sequence%209;ancestorIdentifier=Glyma01g00300.v1.1;pfam=SWIM%20zinc%20finger,MULE%20transposase%20domain;Alias=Glyma.01g000400.Wm82.a2.v1
+Gm01	phytozomev9_0	mRNA	90152	95947	.	-	.	Name=Glyma.01g000400.1;Parent=25;ID=26;Alias=Glyma.01g000400.1.Wm82.a2.v1;ancestorIdentifer=Glyma01g00300.1.v1.1
+Gm01	phytozomev9_0	gene	90289	91197	.	+	.	Name=Glyma.01g000500;ID=36;Alias=Glyma.01g000500.Wm82.a2.v1
+Gm01	phytozomev9_0	mRNA	90289	91197	.	+	.	Name=Glyma.01g000500.1;Parent=36;ID=37;Alias=Glyma.01g000500.1.Wm82.a2.v1

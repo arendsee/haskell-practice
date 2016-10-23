@@ -1,0 +1,10 @@
+##gff-version 3
+##annot-version
+Chr1	phytozomev10	gene	3631	5899	.	+	.	ID=AT1G01010;Name=AT1G01010
+Chr1	phytozomev10	mRNA	3631	5899	.	+	.	ID=AT1G01010.1;Name=AT1G01010.1;pacid=19656964;longest=1;Parent=AT1G01010
+Chr1	phytozomev10	exon	3631	3913	.	+	.	ID=AT1G01010.1.exon.1;Parent=AT1G01010.1;pacid=19656964
+Chr1	phytozomev10	five_prime_UTR	3631	3759	.	+	.	ID=AT1G01010.1.five_prime_UTR.1;Parent=AT1G01010.1;pacid=19656964
+Chr1	phytozomev10	CDS	3760	3913	.	+	0	ID=AT1G01010.1.CDS.1;Parent=AT1G01010.1;pacid=19656964
+Chr1	phytozomev10	exon	3996	4276	.	+	.	ID=AT1G01010.1.exon.2;Parent=AT1G01010.1;pacid=19656964
+Chr1	phytozomev10	CDS	3996	4276	.	+	2	ID=AT1G01010.1.CDS.2;Parent=AT1G01010.1;pacid=19656964
+Chr1	phytozomev10	exon	4486	4605	.	+	.	ID=AT1G01010.1.exon.3;Parent=AT1G01010.1;pacid=19656964

@@ -29,3 +29,5 @@ Definitions:
 
 
 [1] Real World Haskell
+[2] Typeclassopedia - https://wiki.haskell.org/Typeclassopedia
+[3] Clear Haskell blog - http://dev.stephendiehl.com/hask
