@@ -14,7 +14,6 @@ run' :: Cached a b -> a -> Cached a b
 run' (Empty f  ) a = Full f (f a)
 run' (Full  f b) _ = Full f b
 
-
 --------------------------------------------------------------------------
 pipe' :: Cached a b -> Cached b c -> Cached a c
 -- for two empty containers, just pipe the functions
@@ -29,13 +28,18 @@ pipe' (Empty f) (Full g y) = Empty (g . f)
 -- and infix:
 a |. b = a `pipe'` b
 
-getF :: Cached a b -> a
-getF (Empty  f  ) = f
-getF (Cached f _) = f
+getF :: Cached a b -> (a -> b)
+getF (Empty f  ) = f
+getF (Full  f _) = f
+
+getV :: Cached a b -> a -> b
+getV (Empty f  ) a = f a
+getV (Full  f b) _ =   b
+
 
 --------------------------------------------------------------------------
-compose2 :: (a -> b) -> (b -> c) -> (b -> d) -> (a -> ((a -> c), (a -> d)))
-compose2 f g h = \x -> ((g . f) x, (h . f) x)
+compose2 :: (a -> b) -> (b -> c) -> (b -> d) -> (a -> (c, d))
+compose2 f g h = \x -> ((g . f) x , (h . f) x)
 
 branch' :: Cached a b -> Cached b c -> Cached b d -> Cached a (c,d)
 branch' (Empty f  ) c1 c2 = Empty (compose2 f g h) where
@@ -44,14 +48,14 @@ branch' (Empty f  ) c1 c2 = Empty (compose2 f g h) where
 branch' (Full  f x) c1 c2 = Full  (compose2 f g h) (g', h') where
     g  = getF c1
     h  = getF c2
-    g' = run' c1 x
-    h' = run' c2 x
+    g' = getV c1 x
+    h' = getV c2 x
 
 --------------------------------------------------------------------------
-merge' :: (b -> d -> e) -> Cached a b -> Cached c d -> Cached (b,d) e
-merge' f (Empty g  ) (Empty h  ) = Empty (\x,y -> f (g x) (h y))
-merge' f (Full  g x) (Empty h  ) = Empty (\y   -> f x     (h y))
-merge' f (Full  g x) (Full  h y) = Empty (f x y)
+merge' :: Cached a b -> Cached c d -> Cached (a,c) (b,d)
+merge' (Empty g  ) (Empty h  ) = Empty (\(a,b) -> (g a, h b))
+merge' (Full  g x) (Empty h  ) = Empty (\(a,b) -> (x  , h b))
+merge' (Full  g x) (Full  h y) = Full  (\(a,b) -> (x  , y  )) (x,y)
 
 
 --------------------------------------------------------------------------
