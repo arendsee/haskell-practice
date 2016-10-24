@@ -57,7 +57,6 @@ merge' (Empty g  ) (Empty h  ) = Empty (\(a,b) -> (g a, h b))
 merge' (Full  g x) (Empty h  ) = Empty (\(a,b) -> (x  , h b))
 merge' (Full  g x) (Full  h y) = Full  (\(a,b) -> (x  , y  )) (x,y)
 
-
 --------------------------------------------------------------------------
 
 main = do
@@ -77,6 +76,9 @@ main = do
     let cwords   = Empty words
     let creverse = Empty reverse
     let cunwords = Empty unwords
+    let chead    = Empty (fmap head)
+    let cconcat  = Empty (\(x,y) -> x ++ " " ++ y)
+    let cid      = Empty id
 
     -- standard composition
     print $ (unwords . reverse . words) s2 
@@ -86,3 +88,11 @@ main = do
     print $ evaluate' s2 (pipe' cwords (pipe' creverse cunwords))
     -- evaluate wrapped composition with infix notation
     print $ evaluate' s2 (cwords |. creverse |. cunwords)
+
+    -- b1 :: String -> String
+    let b1   = cwords |. creverse |. cunwords
+    -- b2 :: String -> String
+    let b2   = (branch' (cwords |. chead) cid creverse) |. cconcat
+    -- prog :: (String, String) -> String
+    let prog = (merge' b1 b2 |. cconcat)
+    print $ evaluate' (s1, s2) prog
