@@ -1,0 +1,1 @@
+main = getLine >>= readFile >>= putStrLn

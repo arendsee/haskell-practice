@@ -21,3 +21,13 @@ data Bool = True | False
 ```
 
 An algebraic data type is a composite data type. See the wikipedia article. 
+
+Definitions:
+
+    * `Typeclasses` define a set of functions that can have different
+      implementations depending on the type of data they are given [1]
+
+
+[1] Real World Haskell
+[2] Typeclassopedia - https://wiki.haskell.org/Typeclassopedia
+[3] Clear Haskell blog - http://dev.stephendiehl.com/hask

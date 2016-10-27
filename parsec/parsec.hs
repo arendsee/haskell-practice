@@ -1,15 +1,17 @@
-import Text.ParserCombinators.Parsec  --hiding ((<|>), many)
-import Control.Applicative
-import Control.Monad
+import Text.ParserCombinators.Parsec
 
--- example 1
-matchTrue :: Parser String
-matchTrue = String "true"
+-- take lines until none are left to take
+csvFile = endBy line eol
+line    = sepBy cell (char ',')
+cell    = many (noneOf ",\n")
+eol     = char '\n'
 
-parse matchTrue "a test parser" "true"
+parseCSV :: String -> Either ParseError [[String]]
+parseCSV input = parse csvFile "(unknown)" input
 
-alwaysTrue :: Parser Bool
-alwaysTrue = pure True
 
-main = do
-    print $ parse matchTrue "..." "true"
+fastaFile = sepBy entry (char ',')
+entry = many (noneOf ",\n")
+
+-- parseFasta :: String -> Either ParseError [[String]]
+-- parseFasta input = parse fastaFile "(unknown)" input

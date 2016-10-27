@@ -1,4 +1,4 @@
-TARGET=smof
+TARGET=upgma
 
 all:
 	ghc ${TARGET}.hs

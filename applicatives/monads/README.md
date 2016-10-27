@@ -107,7 +107,7 @@ g' :: a -> M a
 
  * The bind operator is a composition operator for composing f' and g'
 
- * Once you have monads, you are magic, you cannot prove stuff, recombine in any way
+ * Once you have monads, you are magic, you can prove stuff, recombine in any way
 
  * Once you have a set of monads, you can combine them in any way
 
