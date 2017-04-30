@@ -2,6 +2,15 @@ module Main where
 import System.Environment
 import Text.ParserCombinators.Parsec hiding (spaces)
 import Control.Monad
+import Numeric -- used for readOct and readHex
+
+data LispVal =
+    Atom String                  |
+    List [LispVal]               |
+    DottedList [LispVal] LispVal |
+    Number Integer               |
+    String String                |
+    Bool Bool deriving(Show)
 
 main :: IO ()
 main = do args <- getArgs
@@ -10,42 +19,15 @@ main = do args <- getArgs
 symbol :: Parser Char
 symbol = oneOf "!$%&|*+-/:<=?>@^_~#"
 
-{- parse ::                                                          -}
-{-     Text.Parsec.Prim.Stream s Data.Functor.Identity.Identity t => -}
-{-     Text.Parsec.Prim.Parsec s () a ->                             -}
-{-     SourceName                     ->                             -}
-{-     s                              ->                             -}
-{-     Either ParseError a                                           -}
-
-{----- 
- - This example composes spaces and symbol to recognize the regular expression
- - / +\S/
- ----}
-{- readExpr :: String -> String                                   -}
-{- readExpr input = case parse (spaces >> symbol) "lisp" input of -}
-{-     Left  err -> "No match: " ++ show err                      -}
-{-     Right val -> "Found value"                                 -}
-{-                                                                -}
-{- spaces :: Parser ()                                            -}
-{- spaces = skipMany1 space                                       -}
-
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
-    Left  err -> "No match: " ++ show err
-    Right val -> "Found value"
-
-data LispVal =
-    Atom String                  |
-    List [LispVal]               |
-    DottedList [LispVal] LispVal |
-    Number Integer               |
-    String String                |
-    Bool Bool
+    Left  err -> "No match: "    ++ show err
+    Right val -> "Found value: " ++ show val
 
 parseString :: Parser LispVal
 parseString = do
     char '"'
-    x <- many (noneOf "\"")
+    x <- many ((char '\\' >> char '"' ) <|> noneOf "\"")
     char '"'
     return $ String x
 
@@ -61,8 +43,36 @@ parseAtom = do
         "#f" -> Bool False
         otherwise -> Atom atom
 
+{- parseNumber :: Parser LispVal                     -}
+{- parseNumber = liftM (Number . read) $ many1 digit -}
+
 parseNumber :: Parser LispVal
-parseNumber = liftM (Number . read) $ many1 digit
+parseNumber = parseNum <|> parseDec <|> parseHex <|> parseOct
+
+parseNum =
+    liftM (Number . read) $ many1 digit
+
+parseDec = do
+    char '#'
+    char 'd'
+    x <- many1 digit
+    return $ Number $ read $ x
+
+parseHex = do
+    char '#'
+    char 'x'
+    x <- many1 (digit <|> oneOf "abcdef")
+    return $ Number $ fst $ head $ readHex $ x
+
+parseOct = do
+    char '#'
+    char 'o'
+    x <- many1 (oneOf "01234567")
+    return $ Number $ fst $ head $ readOct $ x
+
+{- parseNumber = do               -}
+{-     x <- many1 digit           -}
+{-     return $ Number $ read $ x -}
 
 parseExpr :: Parser LispVal
 parseExpr =
