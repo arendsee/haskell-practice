@@ -6,9 +6,13 @@ import Numeric -- used for readOct and readHex
 
 data LispVal =
     Atom String                  |
+    Char Char                    |
+    Number Integer               |
+    Real Float                   |
+    {- Rational Integer Integer     | -}
+    {- Complex Num Num              | -}
     List [LispVal]               |
     DottedList [LispVal] LispVal |
-    Number Integer               |
     String String                |
     Bool Bool deriving(Show)
 
@@ -16,13 +20,37 @@ main :: IO ()
 main = do args <- getArgs
           putStrLn (readExpr (args !! 0))
 
-symbol :: Parser Char
-symbol = oneOf "!$%&|*+-/:<=?>@^_~#"
-
 readExpr :: String -> String
 readExpr input = case parse parseExpr "lisp" input of
     Left  err -> "No match: "    ++ show err
     Right val -> "Found value: " ++ show val
+
+
+-- Miscellaneous parsers --------------------------------------------
+
+symbol :: Parser Char
+symbol = oneOf "!$%&|*+-/:<=?>@^_~#"
+
+spaces :: Parser ()
+spaces = skipMany1 space
+
+-- LispVal parsers --------------------------------------------------
+  
+parseExpr :: Parser LispVal
+parseExpr =
+    parseString   <|>
+    parseReal     <|>
+    {- parseRational <|> -}
+    {- parseComplex  <|> -}
+    parseNumber   <|>
+    parseChar     <|>
+    parseAtom     <|>
+    parseQuoted   <|>
+    do
+        char '('
+        x <- (try parseList) <|> parseDottedList
+        char ')'
+        return x
 
 parseString :: Parser LispVal
 parseString = do
@@ -33,7 +61,6 @@ parseString = do
 
 {- <|> means logical OR -}
 {- #t and #f are true and false in Scheme -}
-parseAtom :: Parser LispVal
 parseAtom = do
     first <-        symbol <|> letter
     rest  <- many $ symbol <|> letter <|> digit
@@ -43,36 +70,55 @@ parseAtom = do
         "#f" -> Bool False
         otherwise -> Atom atom
 
-{- parseNumber :: Parser LispVal                     -}
-{- parseNumber = liftM (Number . read) $ many1 digit -}
+parseChar = try(
+    do
+        char '#' >> char '\\'
+        x <- anyChar -- extend to \n, \r, \t ...
+        return $ Char x
+    )
 
-parseNumber :: Parser LispVal
+parseReal = try(
+    do
+        left <- many1 $ digit
+        char '.'
+        right <- many1 $ digit 
+        return $ Real $ read $ left ++ "." ++ right
+    )
+
 parseNumber = parseNum <|> parseDec <|> parseHex <|> parseOct
 
 parseNum =
     liftM (Number . read) $ many1 digit
 
-parseDec = do
-    try (char '#' >> char 'd')
-    x <- many1 digit
-    return $ Number $ read $ x
+parseDec = try(
+    do
+        char '#' >> char 'd'
+        x <- many1 digit
+        return $ Number $ read $ x
+    )
 
-parseHex = do
-    try (char '#' >> char 'x')
-    x <- many1 (digit <|> oneOf "abcdef")
-    return $ Number $ fst $ head $ readHex $ x
+parseHex = try(
+    do
+        try (char '#' >> char 'x')
+        x <- many1 (digit <|> oneOf "abcdef")
+        return $ Number $ fst $ head $ readHex $ x
+    )
 
-parseOct = do
-    try (char '#' >> char 'o')
-    x <- many1 (oneOf "01234567")
-    return $ Number $ fst $ head $ readOct $ x
+parseOct = try(
+    do
+        try (char '#' >> char 'o')
+        x <- many1 (oneOf "01234567")
+        return $ Number $ fst $ head $ readOct $ x
+    )
 
-{- parseNumber = do               -}
-{-     x <- many1 digit           -}
-{-     return $ Number $ read $ x -}
+parseList = liftM List $ sepBy parseExpr spaces
 
-parseExpr :: Parser LispVal
-parseExpr =
-    parseString <|>
-    parseNumber <|>
-    parseAtom
+parseDottedList = do
+    head <- endBy parseExpr spaces
+    tail <- char '.' >> spaces >> parseExpr
+    return $ DottedList head tail
+
+parseQuoted = do
+    char '\''
+    x <- parseExpr
+    return $ List [Atom "quote", x]
