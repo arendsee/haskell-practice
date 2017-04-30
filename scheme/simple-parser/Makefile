@@ -1,4 +1,4 @@
-TARGET=simple-parser
+TARGET=x
 
 all:
 	ghc -package parsec ${TARGET}.hs

@@ -14,7 +14,23 @@ data LispVal =
     List [LispVal]               |
     DottedList [LispVal] LispVal |
     String String                |
-    Bool Bool deriving(Show)
+    Bool Bool
+
+instance Show LispVal where show = showVal
+
+showVal :: LispVal -> String
+showVal (Atom s)          = s
+showVal (Char s)          = show s
+showVal (Number s)        = show s
+showVal (Real s)          = show s
+showVal (List ss)         = "(" ++ unlist ss ++ ")"
+showVal (DottedList ss s) = "(" ++ unlist ss ++ " . " ++ showVal s ++ ")"
+showVal (String s)        = "\"" ++ s ++ "\""
+showVal (Bool True)       = "#t"
+showVal (Bool False)      = "#f"
+
+unlist :: [LispVal] -> String
+unlist = unwords . map showVal
 
 main :: IO ()
 main = do args <- getArgs
