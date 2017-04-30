@@ -28,9 +28,16 @@ function application.
 Functor instances should also follow the functor laws:
 
 ```
-fmap id = id
-fmap (g . h) = (fmap g) . (fmap h)
+fmap id = id                          -- first law
+fmap (g . h) = (fmap g) . (fmap h)    -- second law
 ```
+
+The second law follows logically from the first. The first requires the
+functor makes no changes to the structure beyond those acting on a single
+element. The latter requires that applying g and h to each element is the
+same as applying h and the g to all elements. The only case where this
+would not be true is when h makes structural changes to the input, which
+is illegal by the first law.
 
 Here is an example (from Typeclassopedia) of a Functor that type checks but
 breaks the functor laws:
