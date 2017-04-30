@@ -53,20 +53,17 @@ parseNum =
     liftM (Number . read) $ many1 digit
 
 parseDec = do
-    char '#'
-    char 'd'
+    try (char '#' >> char 'd')
     x <- many1 digit
     return $ Number $ read $ x
 
 parseHex = do
-    char '#'
-    char 'x'
+    try (char '#' >> char 'x')
     x <- many1 (digit <|> oneOf "abcdef")
     return $ Number $ fst $ head $ readHex $ x
 
 parseOct = do
-    char '#'
-    char 'o'
+    try (char '#' >> char 'o')
     x <- many1 (oneOf "01234567")
     return $ Number $ fst $ head $ readOct $ x
 
@@ -76,6 +73,6 @@ parseOct = do
 
 parseExpr :: Parser LispVal
 parseExpr =
-    parseAtom   <|>
+    parseString <|>
     parseNumber <|>
-    parseString
+    parseAtom
