@@ -29,17 +29,24 @@ showVal (String s)        = "\"" ++ s ++ "\""
 showVal (Bool True)       = "#t"
 showVal (Bool False)      = "#f"
 
+
+eval :: LispVal -> LispVal
+eval val@( String _ ) = val
+eval val@( Number _ ) = val
+eval val@( Real   _ ) = val
+eval val@( Bool   _ ) = val
+eval ( List [Atom "quote", val] ) = val
+
 unlist :: [LispVal] -> String
 unlist = unwords . map showVal
 
 main :: IO ()
-main = do args <- getArgs
-          putStrLn (readExpr (args !! 0))
+main = getArgs >>= putStrLn . show . eval . readExpr . (!! 0)
 
-readExpr :: String -> String
+readExpr :: String -> LispVal
 readExpr input = case parse parseExpr "lisp" input of
-    Left  err -> "No match: "    ++ show err
-    Right val -> "Found value: " ++ show val
+    Left  err -> String $ "No match: " ++ show err
+    Right val -> val
 
 
 -- Miscellaneous parsers --------------------------------------------
