@@ -1,12 +1,4 @@
-{- -- we can write Maybe as a formal member of class MonadPlus             -}
-{- -- (of course, this isn't necessary, since it already is of type monad) -}
-{- instance MonadPlus Maybe where                                         -}
-{-     Nothing  >>= f   = Nothing                                          -}
-{-     (Just x) >>= f   = f x                                              -}
-{-     return           = Just                                             -}
-{-     mzero            = Nothing                                          -}
-{-     mplus Nothing x  = x                                                -}
-{-     mplus (Just x) _ = Just x                                           -}
+import Control.Monad
 
 data Sheep = Sheep (Maybe Sheep) (Maybe Sheep) deriving(Show)
 
@@ -63,20 +55,16 @@ maternalGrandmother s = return s >>= mother >>= mother
 mothersMaternalGrandfather s = return s >>= mother >>= mother >>= father
 
 -- Exercise 2
-parent :: Sheep -> Maybe Sheep
-parent s = (mother s) `mplus` (father s)
+parent :: (MonadPlus m) => Sheep -> m Sheep
+parent (Sheep m f) = m `mplus` f 
 
-grandparent :: Sheep -> Maybe Sheep
-grandparent s = (mother s >>= parent) `mplus` (father s >>= parent)
+grandparent :: (MonadPlus m) => Sheep -> m Sheep
+grandparent (Sheep m f) = (m >>= parent) `mplus` (f >>= parent)
 
 ancestor :: Int -> Maybe Sheep -> Bool
 ancestor 0 _ = True
 ancestor _ Nothing = False
 ancestor i (Just (Sheep m f)) = a m || a f where a = ancestor (i-1)
-
-mplus :: Maybe a -> Maybe a -> Maybe a
-mplus Nothing x  = x
-mplus (Just x) _ = Just x
 
 main = do
     let s = Sheep (Just (Sheep (Just (Sheep Nothing Nothing)) Nothing)) Nothing

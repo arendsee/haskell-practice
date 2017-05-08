@@ -1,6 +1,13 @@
 Monads are:
 
+[Here](https://wiki.haskell.org/index.php?title=All_About_Monads&oldid=54386)
+is a big tutorial on them. It has a lot of examples, comprehensive coverage of
+monads in Prelude, lots on transformers, etc.
+
  * a construct in category theory [1]
+
+
+ * "It is useful to think of a monad as a strategy for combining computations into more complex computations" [6]
 
 
 ```
@@ -139,7 +146,7 @@ References:
  3. Brian Beckman. https://www.youtube.com/watch?v=ZhuHCtR3xq8
  4. Tom LaGatta. https://www.youtube.com/watch?v=o6L6XeNdd\_k
  5. https://en.wikipedia.org/wiki/Commutative\_diagram
-
+ 6. [All About Monads](https://wiki.haskell.org/index.php?title=All_About_Monads&oldid=54386)
 
 @inproceedings{wadler1995monads,
   title={Monads for functional programming},
