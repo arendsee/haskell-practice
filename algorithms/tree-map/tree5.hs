@@ -9,6 +9,11 @@ instance Functor Tree where
   fmap f Nil = Nil
   fmap f (Node x xs) = Node (f x) (fmap (fmap f) xs)
 
+instance Foldable Tree where
+  foldr f z Nil = z
+  foldr f z (Node a []) = f a z
+  foldr f z (Node a (x:xs)) = foldr f (foldr f z x) (Node a xs)
+
 -- screw it, lets stop thinking about type classes, and think about the
 -- functions I actually need.
 
@@ -39,11 +44,22 @@ main = do
   let e = Node "dave"  [d,b]
 
   print $ tree2list e
+  putStrLn "-------------"
 
+  putStrLn "------ forward "
   print $ e
+
+  putStrLn "------ reverse"
   print $ fmap reverse e
 
+  putStrLn "--------- no jes, foldable test"
+  print $ all (/= "jes") e
+
+  putStrLn "--------- child map"
   print $ childMap length e
+
+  putStrLn "--------- family map"
   print $ tree2list $ familyMap family_desc e where
     family_desc parent children = 
       parent ++ " has " ++ (show . length) children ++ " children"
+
