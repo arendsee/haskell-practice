@@ -1,4 +1,4 @@
-TARGET=tree3
+TARGET=tree4
 
 all:
 	ghc ${TARGET}.hs
