@@ -1,9 +1,14 @@
 import Data.Monoid
+import Data.Functor
 import Data.Foldable
 
 type ID = Integer
 
 data Tree a = Nil | Node ID a [Tree a] deriving(Show)
+
+instance Functor Tree where
+  fmap f Nil = Nil
+  fmap f (Node i x xs) = Node i (f x) (fmap (fmap f) xs)
 
 instance Eq (Tree a) where
   (Node i _ _) == (Node j _ _) = i == j
@@ -19,7 +24,11 @@ instance (Monoid a) => Monoid (Tree a) where
 main = do
   let a = Node 1 "hi" []
   let b = Node 2 "bi" []
-  let c = Node 3 "yo" []
-  let d = Node 4 "bu" [a,b]
-  let e = Node 5 "do" [a,b,c]
-  print $ e <> d <> c
+  let c = Node 3 "fo" []
+  let d = Node 4 "bo" [a,b]
+  let e = Node 5 "to" [a,b,c]
+  let z = e <> d <> c 
+
+  print z
+
+  print $ fmap reverse z
