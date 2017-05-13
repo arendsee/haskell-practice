@@ -1,7 +1,7 @@
-TARGET=tree4
+TARGET=tree5
 
 all:
-	ghc ${TARGET}.hs
+	ghc -Wall ${TARGET}.hs
 
 .Phony: clean
 clean:

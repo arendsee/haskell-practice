@@ -1,21 +1,16 @@
-import Data.Monoid
-import Data.Functor
 import Data.List
 import Control.Monad
 
 data Tree a = Nil | Node { value :: a, inputs :: [Tree a] } deriving(Show, Eq)
 
 instance Functor Tree where
-  fmap f Nil = Nil
+  fmap _ Nil = Nil
   fmap f (Node x xs) = Node (f x) (fmap (fmap f) xs)
 
 instance Foldable Tree where
-  foldr f z Nil = z
+  foldr _ z Nil = z
   foldr f z (Node a []) = f a z
   foldr f z (Node a (x:xs)) = foldr f (foldr f z x) (Node a xs)
-
--- screw it, lets stop thinking about type classes, and think about the
--- functions I actually need.
 
 -- Tree to list, just a list of all a
 tree2list :: Eq a => Tree a -> [a]
@@ -36,6 +31,7 @@ childMap f (Node _ ts) = Node new_val new_kids where
   new_val = f $ liftM value $ ts
   new_kids = map (childMap f) ts
 
+main :: IO ()
 main = do
   let a = Node "jes"   []
   let b = Node "jak"   []
@@ -47,7 +43,7 @@ main = do
   putStrLn "-------------"
 
   putStrLn "------ forward "
-  print $ e
+  print $ fmap id e
 
   putStrLn "------ reverse"
   print $ fmap reverse e
@@ -58,8 +54,10 @@ main = do
   putStrLn "--------- child map"
   print $ childMap length e
 
-  putStrLn "--------- family map"
-  print $ tree2list $ familyMap family_desc e where
-    family_desc parent children = 
-      parent ++ " has " ++ (show . length) children ++ " children"
+  print $ "Total children: " ++ (show . foldr (+) 0 . childMap length) e
 
+  putStrLn "--------- family map"
+  print $ tree2list $ familyMap f e
+    where
+    f :: Show a => a -> [a] -> String
+    f p c = (show p) ++ " has " ++ ((show . length) c) ++ " children"
