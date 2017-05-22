@@ -3,7 +3,7 @@ data Tree a = Nil | Node (Tree a) a (Tree a) deriving Show
 showTree :: (Show a) => Tree a -> String
 showTree Nil = ""
 showTree (Node Nil c Nil) = show c
-showTree (Node l c r) = (show c) ++ "(" ++ (showTree l) ++ "," ++ (showTree r) ++ ")"
+showTree (Node l c r) = show c ++ "(" ++ showTree l ++ "," ++ showTree r ++ ")"
 
 
 -- this is a terrible algorithm
@@ -12,9 +12,9 @@ showTree (Node l c r) = (show c) ++ "(" ++ (showTree l) ++ "," ++ (showTree r) +
 --  * is not sorted
 --  * is not balanced
 treeFromList :: [a] -> Tree a
-treeFromList []     = Nil
-treeFromList (x:[]) = Node Nil x Nil
-treeFromList xs     = Node (treeFromList l) c (treeFromList r)
+treeFromList []  = Nil
+treeFromList [x] = Node Nil x Nil
+treeFromList xs  = Node (treeFromList l) c (treeFromList r)
     where
         center' = div (length xs) 2
         l = take center' xs
@@ -34,7 +34,7 @@ reverseTree (Node l c r) = Node (reverseTree r) c (reverseTree l)
 -- rotate
 rotateTree :: Tree a -> Tree a
 rotateTree Nil = Nil
-rotateTree (Node Nil c r) = (Node Nil c r)
+rotateTree (Node Nil c r) = Node Nil c r
 rotateTree (Node (Node ll lc lr) c r) = Node ll lc (Node lr c r)
 
 -- calculate the depth of the tree
@@ -63,18 +63,18 @@ addElement (Node l c r) x
     | otherwise = Node l c (addElement r x)
 
 sortedBinaryTree :: (Ord a) => [a] -> Tree a
-sortedBinaryTree = foldl (\acc x -> addElement acc x) Nil
+sortedBinaryTree = foldl addElement Nil
 
 main = do
     let five' = treeFromList [1..5]
     let ten'  = treeFromList [1..10]
 
-    print $ showTree $ five'
-    print $ showTree $ reverseTree     $ five'
-    print $ showTree $ rotateTree      $ five'
-    print $ showTree $ treeMap id      $ ten'
-    print $ showTree $ treeMap (^2)    $ ten'
-    print $ showTree $ pruneTree (/=9) $ ten'
+    print $ showTree   five'
+    print $ showTree $ reverseTree     five'
+    print $ showTree $ rotateTree      five'
+    print $ showTree $ treeMap id      ten'
+    print $ showTree $ treeMap (^2)    ten'
+    print $ showTree $ pruneTree (/=9) ten'
 
     print $ depth    $ treeFromList [1..10]
     print $ depth    $ treeFromList [1..1000]
