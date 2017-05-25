@@ -1,51 +1,82 @@
-Monads are:
+# Monads
 
-[Here](https://wiki.haskell.org/index.php?title=All_About_Monads&oldid=54386)
-is a big tutorial on them. It has a lot of examples, comprehensive coverage of
-monads in Prelude, lots on transformers, etc.
-
- * a construct in category theory [1]
-
-
- * "It is useful to think of a monad as a strategy for combining computations into more complex computations" [6]
-
-
-```
-    A monad is constructed on top of a polymorphic type such as IO. The monad
-    itself is defined by instance declarations associating the type with the some
-    or all of the monadic classes, Functor, Monad, and MonadPlus. None of the
-    monadic classes are derivable. In addition to IO, two other types in the
-    Prelude are members of the monadic classes: lists ([]) and Maybe. [1]
-```
-
-Monads are governed by a set of laws, understand the laws and you will understand monads (Maybe).
+Monads are instances of a typeclass that defines a `return` and `bind` function
+where 3 laws must be followed.
 
 ``` haskell
--- The monad class defines two operatores: bind (>>=) and return
-
-infixl 1  >>, >>=                                -- 1
-class  Monad m  where                            -- 2
-    (>>=)            :: m a -> (a -> m b) -> m b -- 3
-    (>>)             :: m a -> m b -> m b        -- 4
-    return           :: a -> m a                 -- 5
-    fail             :: String -> m a            -- 6
-    m >> k           =  m >>= \_ -> k            -- 7
+infixl 1  >>, >>=                        -- 1
+class  Monad m  where                    -- 2
+    return   :: a -> m a                 -- 3
+    (>>=)    :: m a -> (a -> m b) -> m b -- 4
+    (>>)     :: m a -> m b -> m b        -- 5
+    fail     :: String -> m a            -- 6
+    m >> k   =  m >>= \_ -> k            -- 7
 ```
-[1]
+
+Only the first two functions are required.
+
+
+Here are the three laws, stated as lists of equalities
+
+```
+-- law 1 ------------------------------------------------------------
+return x >>= f
+
+do
+  y <- return x
+  f y
+
+f x
+
+
+-- law 2 ------------------------------------------------------------
+do
+  x <- f
+  return x
+
+do
+    f a
+
+f a >>= return
+
+
+-- law 3 ------------------------------------------------------------
+do
+    y <- do
+        x <- f
+        g x
+    h y
+
+do
+    x <- f
+    y <- g
+    h y
+
+do
+    x <- f
+    do
+        y <- g
+        h y
+```
+
+Law 3 is basically an associative law, which is pretty plain in the Do
+notation, but a little hard to see otherwise. It would be fun to try to find
+examples of valid instances of typeclass Monad (where `return` and `bind` are
+defined), that violate each of these laws.
 
 
 ``` haskell
 -- The do syntax provides a simple shorthand for chains of monadic operations. The
 -- essential translation of do is captured in the following two rules:
 
-  do e1 ; e2      =  e1 >> e2         -- 8
-  do p <- e1; e2  =  e1 >>= \p -> e2  -- 9
+  do { e1 ; e2     }  =  e1 >> e2         -- 8
+  do { p <- e1; e2 }  =  e1 >>= \p -> e2  -- 9
 ```
 [1]
 
 When using `>>` you just move on to thw next value, with no tracing of the past.
 
-When using `>>=` you carry you state with you.
+When using `>>=` you carry state with you.
 
 In <9> the attachment of p to e1 needs to be transferred to the next do line.
 
@@ -71,6 +102,12 @@ Instead of `int x`, `x : int`. Now functions are `f : int -> int`. Now make
 generic, `f : a -> a`, where `a` is any type.
 
 2. Monoids
+
+Monoids are easy, just type where an associative operator exists that can
+produce a new element in the set from any two elements in the set. Like
+counting numbers upon addition or multiplication. Like lists, where you can
+concatentate two lists into one. Like graphs, where you can take the union of
+edges.
 
 ```
 f : a -> a
