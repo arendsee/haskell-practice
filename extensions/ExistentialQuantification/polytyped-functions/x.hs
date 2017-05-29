@@ -1,7 +1,5 @@
 {-# LANGUAGE ExistentialQuantification #-}
 
-import Data.List (intercalate)
-
 data E = forall a. Show a => E a
 
 instance Show E where
@@ -21,11 +19,8 @@ baz x
   | otherwise = False
 
 joinFields :: Int -> [Int -> E] -> String
-joinFields x fs = unlines . map ($ x) . zipWith (.) (repeat show) $ fs
+joinFields i es = unlines $ map (show . ($ i)) es where
 
 main :: IO ()
 main = do
-  let es = [E 5, E (1,2,3)]
-  mapM_ print es
-
   putStr $ joinFields 5 [E . foo, E . bar, E . baz]
