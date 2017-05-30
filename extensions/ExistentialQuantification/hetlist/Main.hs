@@ -16,3 +16,6 @@ main = do
 
   let b = [Foo (45,"er"), Bar 4, Foo (Just 4,"er")]
   putStrLn $ show b
+
+  let c = [Foo (45,"er")] ++ [Bar 4, Foo (Just 4,"er")]
+  putStrLn $ show c
