@@ -3,7 +3,6 @@
       MultiParamTypeClasses
       , TypeSynonymInstances
       , FlexibleInstances
-      , OverlappingInstances
       , IncoherentInstances
 #-}
 
@@ -17,8 +16,12 @@ instance Foo a String where
   foo = const "yolo"
 
 -- | Specifc value
-instance Foo Int String where
+instance {-# Overlapping #-} Foo String String where
   foo = show
+
+instance {-# Overlapping #-} Foo Bool Int where
+  foo True  = 1
+  foo False = 0
 
 -- All the above now works. But I want to do this:
 --
@@ -33,3 +36,5 @@ instance Foo Int String where
 -- `const "yolo"`. However, this would become ambiguous if the constraints
 -- overlap.  But is their an extension that allows this anyway, calling an
 -- error only in ambiguous cases?
+--
+-- This doesn't seem to be possible, currently.
