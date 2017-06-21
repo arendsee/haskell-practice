@@ -78,5 +78,26 @@ makeLenses ''Interval
 makeLenses ''Entry
 makeLenses ''GFF
 
+-- s ^.  getter
+-- s ^.. 
+
 incrementStart :: GFF -> GFF
 incrementStart = over (gff_entries . traverse . entry_start) (+ 1)
+
+getInterval g = map (\x -> (view entry_start x, view entry_stop x)) (g ^.. (gff_entries . traverse))
+
+validateGFF :: GFF -> Either String GFF
+validateGFF g = if   all (\(x,y) -> x < y) (getInterval g)
+                then Right g
+                else Left "ERROR"
+
+main :: IO ()
+main = do
+  print $ gff ^. gff_species . to reverse
+  print $ gff ^. gff_entries . to length   -- number of entries
+  print $ gff ^. gff_entries . traverse
+
+  print $ [1,2] |> 1
+  print $ 1 <| [1,2]
+  print $ [1,2,3] ^? ix 0 -- maybe get an index
+                          -- ^? makes everything on right maybe
