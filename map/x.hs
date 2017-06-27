@@ -3,8 +3,8 @@
 import Data.Map (Map)
 import qualified Data.Map as DM
 
-foo :: [(Int,Int,Int)]
-foo = [(1,2,3),(1,3,4),(2,5,6)]
+foo1 :: [(Int,Int,Int)]
+foo1 = [(1,2,3),(1,3,4),(2,5,6)]
 
 -- The basic goal of this function is to fold a functor into a map. Where
 -- elements are merged in some non-monoidal fashion way.
@@ -37,35 +37,39 @@ toMap ek mab mabb m0 xs = foldr magic m0 xs
         alterB k = maybe b' (\v -> DM.insert k v b') (toB k)
 
 
+-- Here is the same with a monad strung through for handling error
+toMapM
+  :: (Foldable f, Ord k, Monad m)
+  => (a -> m (Maybe k))      -- fail when required key can't be extracted
+  -> (a -> m (Maybe b))      -- fail when can't build a required compnent
+  -> (a -> b -> m (Maybe b)) -- fail when can't merge required component
+  -> m (Map k b)             -- initial map (likely empty)
+  -> f a
+  -> m (Map k b)             -- final map
+
+toMapM ek mab mabb m0 xs = foldr magic m0 xs
+  where
+  magic a b = ek a >>= maybe b alterB 
+    where
+    alterB k
+      =   (DM.lookup k <$> b)
+      >>= maybe (mab a) (mabb a)
+      >>= maybe b (\v -> DM.insert k v <$> b)
 
 main :: IO ()
 main = do
-  print foo
+  let foo2 = toMap  (\(x,_,_) -> Just x)
+                    (\(_,y,z) -> Just ([y],[z]))
+                    (\(_,y,z) (ys,zs) -> Just (ys ++ [y], zs ++ [z]))
+                    DM.empty
+                    foo1
 
-  let foo2 = toMap (\(x,_,_) -> Just x)
-                   (\(_,y,z) -> Just ([y],[z]))
-                   (\(_,y,z) (ys,zs) -> Just (ys ++ [y], zs ++ [z]))
-                   DM.empty
-                   foo
+  let foo3 = toMapM (\(x,_,_) -> (Right $ Just x))
+                    (\(_,y,z) -> (Right $ Just ([y],[z])))
+                    (\(_,y,z) (ys,zs) -> (Right $ Just (ys ++ [y], zs ++ [z])))
+                    (Right DM.empty)
+                    foo1
 
+  print foo1
   print foo2
-
-
-
--- toMap
---   :: (Foldable f, Ord k, Monad m)
---   => (a -> m (Maybe k))      -- try to extract key
---   -> (a -> m (Maybe b))      -- create new element if possible (key wasn't in map)
---   -> (a -> b -> m (Maybe b)) -- merge element (key is in map)
---   -> f a                     -- the functor of stuff
---   -> m (Map k b)             -- the output map
---
--- toMap ek mab mabb xs = foldr magic (return DM.empty) xs
---   where
---     -- magic :: a -> m (Map k b) -> m (Map k b)
---     magic a' b' = ek a' >>= maybe b' alterB
---       where
---         -- alterB :: k -> m (Map k b)
---         alterB k = toB k >>= maybe b' (\v -> DM.insert k v <$> b')
---         -- toB :: k -> m b
---         toB k = (DM.lookup k <$> b') >>= maybe (mab a') (mabb a')
+  print ( foo3 :: Either String (Map Int ([Int],[Int])) )
