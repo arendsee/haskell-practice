@@ -6,8 +6,13 @@ I converted from Gnome desktop to Xmonad, a Haskell-based window manager. The
 configuration files are all in Haskell. I don't understand them, but I really,
 really want to remap my workspace keys. So ... learn Haskell.
 
-I'll be mostly basing my studies (for now at least) on the quirky Learn You
-A Haskell tutorial.
+# Sources of information
+
+These are the primary sources. Both are cleanly written and comprehensive.
+
+ 1. GHC manual - GHC details (e.g. optimizations) and info on all extensions
+ 2. Haskell 2010 language report - everything about the language
+    [report](https://www.haskell.org/onlinereport/haskell2010/)
 
 # Things I naively think are true
 
