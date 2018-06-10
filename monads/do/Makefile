@@ -1,7 +1,7 @@
 TARGET=do
 
 all:
-	ghc ${TARGET}.hs
+	ghc -dynamic ${TARGET}.hs
 
 .Phony: clean
 clean:

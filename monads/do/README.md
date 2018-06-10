@@ -1,6 +1,6 @@
 # Do notation
 
-I've found this confusing in the past. `Since it is close to imperative
+I've found this confusing in the past. Since it is close to imperative
 programming, I haven't had too much trouble using it. But I miss the nuance and
 the monadic relation. What I was missing was a formal set of rules describing
 what the notation does.
