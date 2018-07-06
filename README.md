@@ -14,7 +14,11 @@ These are the primary sources. Both are cleanly written and comprehensive.
  2. Haskell 2010 language report - everything about the language
     [report](https://www.haskell.org/onlinereport/haskell2010/)
 
-# Things I naively think are true
+And some non-primary sources of good info:
+
+ 3. https://www.vex.net/~trebla/haskell/index.xhtml
+
+## Things I think are true
 
  1. all variables are immutable
  2. functions take precedence over everything
@@ -24,13 +28,13 @@ These are the primary sources. Both are cleanly written and comprehensive.
     a module that are not imported)
  6. `do` is a special syntax for monads
 
-# Contents
+## Contents
 
  1. by-topic - material loosely following a tutorial
  2. scratch - random stuff, some modified from tutorials
  3. screw it, I'll never keep this up-to-date
 
-# Terminology
+## Terminology
 
  1. *Partial* versus *total* functions - partial functions are not defined across
     their entire domain, for example `head`, which dies on empty lists.
