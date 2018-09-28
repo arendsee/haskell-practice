@@ -1,3 +1,5 @@
+# Functor
+
 A functor is a typeclass that requires definition of fmap
 
 ```
@@ -16,6 +18,8 @@ fmap (+2) [1,2,3]
 map (fmap (+2)) [Just 1, Nothing, Just 2]
 ```
 
+# Applicative
+
 Applicatives allow both value *and* function to be wrapped in context.
 
 ```
@@ -27,9 +31,7 @@ Just reverse <*> Just [Just 1, Nothing, Just 3]
 (*) <$> Just 5 <*> Just 3
 ```
 
-
-
-Monads
+# Monads
 
 A monad is a type class where bind and return are defined.
 
